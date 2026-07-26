@@ -42,7 +42,7 @@ const buildConventionalSpecifier = (
   manifest: RuntimeCompositionManifest,
   sliceName: string,
 ): string =>
-  `${ensureNamespacePrefix(manifest.namespace)}${sliceName}/${manifest.entryFile ?? "index.mjs"}`;
+  `${ensureNamespacePrefix(manifest.namespace)}${manifest.slicePrefix ?? ""}${sliceName}/${manifest.entryFile ?? "index.mjs"}`;
 
 const matchRoutePattern = (
   pattern: string,

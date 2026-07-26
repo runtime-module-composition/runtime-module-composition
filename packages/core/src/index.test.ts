@@ -344,6 +344,13 @@ describe("runtime composition core", () => {
     );
   });
 
+  test("applies slicePrefix to conventional specifiers", () => {
+    expect(
+      resolveRoute({ ...manifest, slicePrefix: "web-" }, "/booking/anything")
+        ?.specifier,
+    ).toBe("@acme/web-booking/index.mjs");
+  });
+
   test("returns null for the root route unless an override is configured", () => {
     expect(resolveRoute(manifest, "/")).toBeNull();
   });

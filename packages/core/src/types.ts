@@ -60,6 +60,11 @@ export type RuntimeCompositionManifest = {
   externalDepsOrigin?: string;
   externalDepsPrefix?: string;
   entryFile?: string;
+  /** Prepended to the URL path segment when building a *conventional* slice
+   *  specifier: slicePrefix "web-" turns route "/booking" into
+   *  "<namespace>/web-booking/<entryFile>". Does not affect routeOverrides or
+   *  sliceOverrides, which carry explicit specifiers. */
+  slicePrefix?: string;
   environments?: Partial<Record<RuntimeEnvironment, EnvironmentConfig>>;
   exactImports?: Record<string, SharedDependencyConfig>;
   sliceOverrides?: Record<string, SliceConfig>;
