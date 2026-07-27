@@ -71,6 +71,17 @@ The Vite adapter includes the generated import map in Vite's transformed HTML an
 
 Early scaffold. The current goal is to prove the package boundaries and keep the core portable before adding framework-specific behavior.
 
+## Security Model
+
+The manifest is executable configuration. Every URL it references — `assetsOrigin`, `externalDepsOrigin`, per-environment `sliceOrigins`, `exactImports`, slice entries — becomes an import map entry or a dynamic `import()` target in the browser. Whoever controls the manifest controls what code runs on the page.
+
+What that means in practice:
+
+- **Treat the manifest as code, not data.** Ship it from the same trusted pipeline as your application source and review changes to it with the same rigor. Never build a manifest from user input or fetch it from an origin you don't control.
+- **`validateManifest` is a linter, not a security boundary.** It checks shape and consistency (absolute HTTP(S) URLs, namespace conventions, version conflicts). It cannot distinguish a trusted origin from a hostile one that happens to be well-formed.
+- **`externalDepsOrigin` is a supply-chain trust decision.** Pointing it at a public CDN (e.g. `esm.sh`) means every page trusts that CDN to serve the exact code it claims. Self-host the external dependencies if your threat model doesn't allow that.
+- **Use CSP as the enforcement layer.** A `script-src` policy restricted to your `assetsOrigin` and `externalDepsOrigin` makes the browser reject module loads from anywhere else, even if a manifest entry is compromised. Import maps have no built-in integrity mechanism, so CSP is where origin restrictions are actually enforced.
+
 ## Implementation Guides
 
 Each public method has a usage guide in [docs/implementation-guide.md](docs/implementation-guide.md).
